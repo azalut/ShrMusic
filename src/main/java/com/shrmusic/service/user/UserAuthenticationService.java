@@ -1,7 +1,7 @@
 package com.shrmusic.service.user;
 
 import com.shrmusic.entity.user.User;
-import com.shrmusic.repository.user.UserRepository;
+import com.shrmusic.repository.user.UserJpaRepository;
 import com.shrmusic.util.user.UserDetailsAssemblage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class UserAuthenticationService implements UserDetailsService{
     @Autowired
-    private UserRepository userRepository;
+    private UserJpaRepository userJpaRepository;
     @Autowired
     private UserDetailsAssemblage assemblage;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.readByUsername(username);
+        User user = userJpaRepository.findByUsername(username);
         return assemblage.assembleUser(user);
     }
 }

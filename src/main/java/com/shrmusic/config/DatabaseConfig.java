@@ -3,6 +3,7 @@ package com.shrmusic.config;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -12,6 +13,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import java.util.Properties;
 
 @Configuration
+@EnableJpaRepositories(basePackages = "com.shrmusic.repository")
 public class DatabaseConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(){
