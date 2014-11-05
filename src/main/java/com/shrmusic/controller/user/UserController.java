@@ -1,4 +1,4 @@
-package com.shrmusic.controller;
+package com.shrmusic.controller.user;
 
 import com.shrmusic.entity.user.Role;
 import com.shrmusic.entity.user.User;
