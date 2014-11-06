@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class InitController {
-    //TODO: remember about @Transactional annotation while @PersistenceContext in repositories
     @RequestMapping(value = {"", "/", "/home"})
     @ResponseBody
     public String test(){
