@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class InitController {
+public class HomepageController {
     @RequestMapping(value = {"", "/", "/home"})
     @ResponseBody
     public String test(){
