@@ -2,6 +2,7 @@ package com.shrmusic.entity.user;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -10,8 +11,10 @@ public class User implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column() @NotNull
+    @Size(min = 3, max = 40)
+    @Column(updatable = false) @NotNull
     private String username;
+    @Size(min = 5, max = 40)
     @Column @NotNull
     private String password;
     @Column @NotNull

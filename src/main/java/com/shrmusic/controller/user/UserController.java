@@ -7,13 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
     private UserService userService;
-
+    //TODO: handle username and password length exception somehow, figure out how and implement it
+    
     @RequestMapping(method = RequestMethod.POST)
     public void create(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse response){
         boolean isAdded = userService.addDefaultUserIfNotExists(username, password, true);
