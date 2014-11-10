@@ -2,12 +2,16 @@ package com.shrmusic.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import javax.sql.DataSource;
 
@@ -15,10 +19,19 @@ import javax.sql.DataSource;
 @EnableWebMvcSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
-    private DataSource dataSource;
+    @Qualifier("restAuthEntryPoint")
+    private AuthenticationEntryPoint authenticationEntryPoint;
     @Autowired
     @Qualifier(value = "userAuthenticationService")
     private UserDetailsService userDetailsService;
+    @Autowired
+    @Qualifier("successHandler")
+    private RestAuthenticationSuccessHandler successHandler;
+
+    @Bean
+    public SimpleUrlAuthenticationFailureHandler simpleUrlAuthenticationFailureHandler(){
+        return new SimpleUrlAuthenticationFailureHandler();
+    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -31,7 +44,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
                 //.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")  // uncomment after testing
                 .antMatchers("/**").permitAll()
-                .and().formLogin()
+                .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
+                .and().formLogin().successHandler(successHandler).failureHandler(simpleUrlAuthenticationFailureHandler())
                 .and().csrf().disable();
     }
 }
