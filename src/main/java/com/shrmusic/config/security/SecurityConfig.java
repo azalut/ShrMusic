@@ -32,8 +32,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("admin").password("admin").roles("ADMIN");
         auth.userDetailsService(userDetailsService);
     }
 
@@ -41,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                //.antMatchers("/user/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")  // uncomment after testing
+                .antMatchers("/user/account/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")  // uncomment after testing
                 .antMatchers("/**").permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and().formLogin().successHandler(successHandler).failureHandler(simpleUrlAuthenticationFailureHandler())
