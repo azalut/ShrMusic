@@ -24,6 +24,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     @Qualifier("successHandler")
     private RestAuthenticationSuccessHandler successHandler;
+    @Autowired
+    @Qualifier("logoutSuccessHandler")
+    private RestLogoutSuccessHandler logoutSuccessHandler;
 
     @Bean
     public SimpleUrlAuthenticationFailureHandler simpleUrlAuthenticationFailureHandler(){
@@ -43,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/**").permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
                 .and().formLogin().successHandler(successHandler).failureHandler(simpleUrlAuthenticationFailureHandler())
+                .and().logout().logoutSuccessHandler(logoutSuccessHandler)
                 .and().csrf().disable();
     }
 }
