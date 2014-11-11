@@ -7,9 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -37,5 +35,13 @@ public class UserController {
             response.setStatus(HttpStatus.OK.value());
         }
         return user;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void usernamePasswordException(ConstraintViolationException exception){
+        exception.getConstraintViolations().stream().forEach(
+                n -> System.out.println(n.getPropertyPath().toString())
+        );
     }
 }

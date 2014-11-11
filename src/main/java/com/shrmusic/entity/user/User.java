@@ -1,5 +1,7 @@
 package com.shrmusic.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -11,11 +13,11 @@ public class User implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Size(min = 3, max = 40)
+    @Size(min = 5, max = 40)
     @Column(updatable = false) @NotNull
     private String username;
     @Size(min = 5, max = 40)
-    @Column @NotNull
+    @Column @NotNull @JsonIgnore
     private String password;
     @Column @NotNull
     private boolean enabled;
