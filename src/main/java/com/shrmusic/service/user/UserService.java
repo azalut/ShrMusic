@@ -6,7 +6,11 @@ import com.shrmusic.repository.user.UserJpaRepository;
 import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -25,9 +29,20 @@ public class UserService {
         User user = userJpaRepository.findByUsername(username);
         if(user == null){
             Set<Role> userRoles = new HashSet<Role>(Arrays.asList(role.getRole()));
-            userJpaRepository.save(new User(username, password, enabled, userRoles));
+            userJpaRepository.save(new User(username, password, enabled, null, userRoles));
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public boolean setAccessToken(Long id, String token){
+        try {
+            User user = userJpaRepository.findOne(id);
+            user.setAccessToken(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

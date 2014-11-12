@@ -21,16 +21,19 @@ public class User implements Serializable{
     private String password;
     @Column @NotNull
     private boolean enabled;
+    @Column
+    private String accessToken;
     @ElementCollection
     private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, boolean enabled, Set<Role> roles) {
+    public User(String username, String password, boolean enabled, String accessToken, Set<Role> roles) {
         this.username = username;
         this.password = password;
         this.enabled = enabled;
+        this.accessToken = accessToken;
         this.roles = roles;
     }
 
@@ -64,6 +67,14 @@ public class User implements Serializable{
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getAccessToken() {
+        return accessToken;
+    }
+
+    public void setAccessToken(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public Set<Role> getRoles() {

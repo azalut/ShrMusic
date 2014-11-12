@@ -14,8 +14,7 @@ import javax.validation.ConstraintViolationException;
 public class UserController {
     @Autowired
     private UserService userService;
-    //TODO: handle username and password length exception somehow, figure out how and implement it
-    
+
     @RequestMapping(method = RequestMethod.POST)
     public void create(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse response){
         boolean isAdded = userService.addDefaultUserIfNotExists(username, password, true);
