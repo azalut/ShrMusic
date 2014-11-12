@@ -9,8 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(value = "/user/account")
-public class UserAccountController {
+@RequestMapping(value = "/account")
+public class AccountController {
     @Autowired
     private UserService userService;
 
