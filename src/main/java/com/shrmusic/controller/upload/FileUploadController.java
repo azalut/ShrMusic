@@ -20,8 +20,8 @@ public class FileUploadController {
     private FileUploadService uploadService;
 
     @RequestMapping(value = "", method = RequestMethod.POST)
-    public void uploadFile(@RequestParam(value = "name") final String name, @RequestParam("file") MultipartFile file, HttpServletResponse response){
-        if (uploadService.handleUpload(name, file)) {
+    public void uploadFile(@RequestParam("file") MultipartFile[] files, HttpServletResponse response){
+        if (uploadService.handleUpload(files)) {
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         } else {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
