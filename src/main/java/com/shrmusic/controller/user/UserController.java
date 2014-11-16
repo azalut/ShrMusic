@@ -21,7 +21,7 @@ public class UserController {
         if(isAdded){ //TODO: return Location header
             response.setStatus(HttpServletResponse.SC_CREATED);
         }else{
-            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            response.setStatus(HttpServletResponse.SC_CONFLICT);
         }
     }
 
