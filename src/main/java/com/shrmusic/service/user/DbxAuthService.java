@@ -22,7 +22,7 @@ public class DbxAuthService {
 
     public String returnAuthUrl(final String appkey, final String appsecret){
         DbxAppInfo appInfo = new DbxAppInfo(appkey, appsecret);
-        DbxRequestConfig config = new DbxRequestConfig("ShrMusic/1.0", Locale.getDefault().toString());
+        DbxRequestConfig config = new DbxRequestConfig("JavaTutorial/1.0", Locale.getDefault().toString());
 
         webAuthNoRedirect = new DbxWebAuthNoRedirect(config, appInfo);
         return webAuthNoRedirect.start();
