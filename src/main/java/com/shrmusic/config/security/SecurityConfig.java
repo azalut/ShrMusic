@@ -1,11 +1,9 @@
 package com.shrmusic.config.security;
 
-import com.shrmusic.config.CORSFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,15 +11,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-
-import javax.servlet.Filter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebMvcSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)   /* enable for example: @Secured("ROLE_USER") above class or method annotation */
+@EnableGlobalMethodSecurity(securedEnabled = true)   /* enables for example: @Secured("ROLE_USER") above class or method annotation */
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     @Qualifier("restAuthEntryPoint")
@@ -50,13 +45,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.addFilterBefore(authenticationTokenProcessingFilter, AbstractPreAuthenticatedProcessingFilter.class);
+        http.addFilterBefore(authenticationTokenProcessingFilter, UsernamePasswordAuthenticationFilter.class);
         http.authorizeRequests()
+                .antMatchers("/admin**").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/account*//**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/user**").permitAll()
-                .antMatchers("/logout**").access("isAuthenticated()")
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-                .and().formLogin().successHandler(successHandler)
+                .and().formLogin().successHandler(successHandler).loginPage("/authtoken")
                 .and().logout().logoutSuccessHandler(logoutSuccessHandler)
                 .and().csrf().disable();
     }

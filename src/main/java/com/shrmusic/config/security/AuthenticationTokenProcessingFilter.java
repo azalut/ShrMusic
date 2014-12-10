@@ -30,7 +30,7 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
             String token = params.get("token")[0];
             if(tokenService.validate(token)){
                 UserDetails userDetails = tokenService.getUserFromToken(token);
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) servletRequest));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
