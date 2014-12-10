@@ -22,6 +22,9 @@ public class UserService {
         return userJpaRepository.findOne(id);
     }
 
+    public User findByUsername(String username){
+        return userJpaRepository.findByUsername(username);
+    }
     public boolean addDefaultUserIfNotExists(final String username, final String password, final boolean enabled){
         User user = userJpaRepository.findByUsername(username);
         if(user == null){

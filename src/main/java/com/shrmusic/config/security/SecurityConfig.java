@@ -1,9 +1,11 @@
 package com.shrmusic.config.security;
 
+import com.shrmusic.config.CORSFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,7 +13,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+
+import javax.servlet.Filter;
 
 @Configuration
 @EnableWebMvcSecurity
@@ -29,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Autowired
     @Qualifier("logoutSuccessHandler")
     private RestLogoutSuccessHandler logoutSuccessHandler;
+    @Autowired
+    private AuthenticationTokenProcessingFilter authenticationTokenProcessingFilter;
 
     @Bean
     public SimpleUrlAuthenticationFailureHandler simpleUrlAuthenticationFailureHandler(){
@@ -42,12 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(authenticationTokenProcessingFilter, AbstractPreAuthenticatedProcessingFilter.class);
         http.authorizeRequests()
-                .antMatchers("/admin/**").access("hasRole('ROLE_ADMIN')")
-                .antMatchers("/account/**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
-                .antMatchers("/**").permitAll()
+                .antMatchers("/account*//**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
+                .antMatchers("/user**").permitAll()
+                .antMatchers("/logout**").access("isAuthenticated()")
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-                .and().formLogin().successHandler(successHandler).failureHandler(simpleUrlAuthenticationFailureHandler())
+                .and().formLogin().successHandler(successHandler)
                 .and().logout().logoutSuccessHandler(logoutSuccessHandler)
                 .and().csrf().disable();
     }

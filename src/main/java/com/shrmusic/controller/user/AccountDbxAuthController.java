@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.security.Principal;
 
 @RestController
 @RequestMapping(value = "/account/{id}")
@@ -22,7 +23,6 @@ public class AccountDbxAuthController {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             return null;
         }
-
     }
 
     @RequestMapping(value = "/{authKey}", method = RequestMethod.PUT)
@@ -33,5 +33,10 @@ public class AccountDbxAuthController {
         }else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    @RequestMapping(value = "/whoami")
+    public String whoami(Principal principal){
+        return principal.getName();
     }
 }

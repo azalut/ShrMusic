@@ -23,7 +23,7 @@ public class User implements Serializable{
     private boolean enabled;
     @Column
     private String accessToken;
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     public User() {
