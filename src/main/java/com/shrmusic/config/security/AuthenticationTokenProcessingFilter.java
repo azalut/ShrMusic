@@ -1,6 +1,6 @@
 package com.shrmusic.config.security;
 
-import com.shrmusic.service.TokenService;
+import com.shrmusic.service.BasicTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,7 @@ import java.util.Map;
 @Component("authTokenProcess")
 public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
     @Autowired
-    private TokenService tokenService;
+    private BasicTokenService basicTokenService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -28,8 +28,8 @@ public class AuthenticationTokenProcessingFilter extends GenericFilterBean {
         System.err.println("Request parameters obtained.");
         if(params.containsKey("token")){
             String token = params.get("token")[0];
-            if(tokenService.validate(token)){
-                UserDetails userDetails = tokenService.getUserFromToken(token);
+            if(basicTokenService.validate(token)){
+                UserDetails userDetails = basicTokenService.getUserFromToken(token);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails((HttpServletRequest) servletRequest));
 

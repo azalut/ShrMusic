@@ -29,9 +29,9 @@ public class UserController {
     public User find(@PathVariable("id") Long id, HttpServletResponse response){
         User user = userService.findById(id);
         if(user == null){
-            response.setStatus(HttpStatus.NO_CONTENT.value());
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }else{
-            response.setStatus(HttpStatus.OK.value());
+            response.setStatus(HttpServletResponse.SC_OK);
         }
         return user;
     }

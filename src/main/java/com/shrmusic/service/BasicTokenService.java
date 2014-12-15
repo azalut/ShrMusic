@@ -11,7 +11,7 @@ import org.springframework.util.DigestUtils;
 import java.util.Base64;
 
 @Service
-public class BasicTokenService implements TokenService{
+public class BasicTokenService {
     @Autowired
     private UserService userService;
     @Autowired
@@ -25,7 +25,6 @@ public class BasicTokenService implements TokenService{
         return new String(Base64.getDecoder().decode(token));
     }
 
-    @Override
     public boolean validate(String token){
         String decodedToken = decodeToken(token);
         if(decodedToken.contains(".")){
@@ -39,7 +38,6 @@ public class BasicTokenService implements TokenService{
         return false;
     }
 
-    @Override
     public UserDetails getUserFromToken(String token) {
         String decodedToken = decodeToken(token);
         if(decodedToken.contains(".")){
