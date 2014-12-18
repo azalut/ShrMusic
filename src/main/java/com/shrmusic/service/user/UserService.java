@@ -7,6 +7,7 @@ import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -29,20 +30,10 @@ public class UserService {
         User user = userJpaRepository.findByUsername(username);
         if(user == null){
             Set<Role> userRoles = new HashSet<Role>(Arrays.asList(role.getRole()));
-            userJpaRepository.save(new User(username, password, enabled, null, userRoles));
+            String md5Password = DigestUtils.md5DigestAsHex(password.getBytes());
+            userJpaRepository.save(new User(username, md5Password, enabled, null, userRoles));
             return true;
         }
         return false;
-    }
-
-    @Transactional
-    public boolean setAccessToken(Long id, String token){
-        try {
-            User user = userJpaRepository.findOne(id);
-            user.setAccessToken(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
     }
 }

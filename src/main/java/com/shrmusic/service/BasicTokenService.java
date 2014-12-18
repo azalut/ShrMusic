@@ -17,10 +17,6 @@ public class BasicTokenService {
     @Autowired
     private UserDetailsAssemblage userDetailsAssemblage;
 
-    public String getToken(UserDetails userDetails){
-        return userDetails.getUsername() + "token";
-    }
-
     private String decodeToken(String token){
         return new String(Base64.getDecoder().decode(token));
     }
@@ -31,7 +27,7 @@ public class BasicTokenService {
             String[] usernamePasswordArray = decodedToken.split("\\.");
             User user = userService.findByUsername(usernamePasswordArray[0]);
             if(user != null){
-                String userPasswordMD5 = DigestUtils.md5DigestAsHex(user.getPassword().getBytes());
+                String userPasswordMD5 = user.getPassword();
                 return userPasswordMD5.equals(usernamePasswordArray[1]);
             }
         }
