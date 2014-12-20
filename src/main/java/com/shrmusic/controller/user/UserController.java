@@ -18,7 +18,9 @@ public class UserController {
     @RequestMapping(method = RequestMethod.POST)
     public void create(@RequestParam("username") String username, @RequestParam("password") String password, HttpServletResponse response){
         boolean isAdded = userService.addDefaultUserIfNotExists(username, password, true);
-        if(isAdded){ //TODO: return Location header
+        if(isAdded){
+            User user = userService.findByUsername(username);
+            response.setHeader("Location", "/user/" + user.getId());
             response.setStatus(HttpServletResponse.SC_CREATED);
         }else{
             response.setStatus(HttpServletResponse.SC_CONFLICT);
