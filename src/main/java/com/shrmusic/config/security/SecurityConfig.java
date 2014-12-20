@@ -3,6 +3,7 @@ package com.shrmusic.config.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,7 +34,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService);
+        //encoder have to be set to let spring context load user's password from database when entering /gettoken url
+        auth.userDetailsService(userDetailsService).passwordEncoder(new Md5PasswordEncoder());
     }
 
     @Override
@@ -44,7 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .antMatchers("/account*//**").access("hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')")
                 .antMatchers("/user**").permitAll()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint)
-                .and().formLogin().successHandler(successHandler).loginPage("/authtoken")
+                .and().formLogin().successHandler(successHandler).loginPage("/gettoken")
                 .and().logout().logoutSuccessHandler(logoutSuccessHandler)
                 .and().csrf().disable();
     }
