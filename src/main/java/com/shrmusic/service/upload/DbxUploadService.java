@@ -2,22 +2,16 @@ package com.shrmusic.service.upload;
 
 import com.dropbox.core.DbxClient;
 import com.dropbox.core.DbxException;
-import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.DbxWriteMode;
-import com.shrmusic.entity.user.User;
-import com.shrmusic.repository.user.UserJpaRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.shrmusic.service.DbxAbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Locale;
 
 @Service
-public class DbxUploadService {
-    @Autowired
-    private UserJpaRepository userJpaRepository;
+public class DbxUploadService extends DbxAbstractService {
 
     public boolean uploadFiles(final Long id, MultipartFile[] files){
         DbxClient client = createDbxClient(id);
@@ -35,15 +29,5 @@ public class DbxUploadService {
             }
         }
         return true;
-    }
-
-    private DbxClient createDbxClient(final Long id){
-        User user = userJpaRepository.findOne(id);
-        if(user == null){
-            return null;
-        }
-
-        DbxRequestConfig config = new DbxRequestConfig("JavaTutorial/1.0", Locale.getDefault().toString());
-        return new DbxClient(config, user.getAccessToken());
     }
 }

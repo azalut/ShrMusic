@@ -6,7 +6,6 @@ import com.shrmusic.repository.user.UserJpaRepository;
 import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.Arrays;

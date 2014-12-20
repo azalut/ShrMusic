@@ -6,7 +6,6 @@ import com.shrmusic.util.user.UserDetailsAssemblage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.util.DigestUtils;
 
 import java.util.Base64;
 
