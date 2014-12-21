@@ -12,11 +12,9 @@ public class DbxFileDownloadController {
     @Autowired
     private DbxDownloadService dbxDownloadService;
 
-    //TODO: return file list (from dbx)
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<String> getFilenameList(@PathVariable("id") Long id) {
-        dbxDownloadService.getFilenameList(id);
-        return null;
+        return dbxDownloadService.getFilenameList(id);
     }
 }

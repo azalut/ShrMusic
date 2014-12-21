@@ -8,10 +8,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DbxDownloadService extends DbxAbstractService {
-    //TODO: finish this class
+
     public List<String> getFilenameList(final Long id) {
         DbxClient client = createDbxClient(id);
         if (client == null) {
@@ -19,10 +20,9 @@ public class DbxDownloadService extends DbxAbstractService {
         }
         try {
             DbxEntry.WithChildren listing = client.getMetadataWithChildren("/");
-            listing.children.stream().forEach(System.out::println);
+            return listing.children.stream().map(n -> n.name).collect(Collectors.toList());
         } catch (DbxException e) {
             return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 }
