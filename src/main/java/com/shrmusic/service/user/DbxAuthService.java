@@ -3,6 +3,7 @@ package com.shrmusic.service.user;
 import com.dropbox.core.*;
 import com.shrmusic.entity.user.User;
 import com.shrmusic.repository.user.UserJpaRepository;
+import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +14,10 @@ import java.util.Locale;
 public class DbxAuthService {
     @Autowired
     private UserJpaRepository userJpaRepository;
+    @Autowired
+    private UserService userService;
     private DbxWebAuthNoRedirect webAuthNoRedirect;
+    private final RoleEnum roleTOKENSAVED = RoleEnum.ROLE_TOKENSAVED;
 
     public boolean userExists(final Long id){
         User user = userJpaRepository.findOne(id);
@@ -34,6 +38,7 @@ public class DbxAuthService {
             DbxAuthFinish authFinish = webAuthNoRedirect.finish(authKey);
             User user = userJpaRepository.findOne(id);
             user.setAccessToken(authFinish.accessToken);
+            userService.addRole(id, roleTOKENSAVED.getRole());
             return true;
         } catch (DbxException e) {
             return false;

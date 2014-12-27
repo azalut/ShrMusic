@@ -6,6 +6,7 @@ import com.shrmusic.repository.user.UserJpaRepository;
 import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
 import java.util.Arrays;
@@ -35,5 +36,13 @@ public class UserService {
             return true;
         }
         return false;
+    }
+
+    @Transactional
+    public void addRole(final Long id, Role role){
+        User user = userJpaRepository.getOne(id);
+        Set<Role> roles = user.getRoles();
+        roles.add(role);
+        user.setRoles(roles);
     }
 }
