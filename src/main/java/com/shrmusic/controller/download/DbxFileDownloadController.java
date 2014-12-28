@@ -16,13 +16,7 @@ public class DbxFileDownloadController {
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<String> getFilenameList(@PathVariable("id") Long id) {
-        return dbxDownloadService.getFilenameList(id);
-    }
-
-    //TODO: return file in the response body
-    @RequestMapping(value = "/file", method = RequestMethod.GET)
-    public void getFileByName(@RequestParam("name") final String name, HttpServletResponse response){
-
+    public List<String> getFilenameList() {
+        return dbxDownloadService.getFilenameList();
     }
 }

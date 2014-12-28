@@ -3,7 +3,8 @@ package com.shrmusic.service.upload;
 import com.dropbox.core.DbxClient;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxWriteMode;
-import com.shrmusic.service.DbxAbstractService;
+import com.shrmusic.service.CurrentAuthUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -11,13 +12,12 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @Service
-public class DbxUploadService extends DbxAbstractService {
+public class DbxUploadService {
+    @Autowired
+    private CurrentAuthUserService currentAuthUserService;
 
-    public boolean uploadFiles(final Long id, MultipartFile[] files){
-        DbxClient client = createDbxClient(id);
-        if(client == null){
-            return false;
-        }
+    public boolean uploadFiles(MultipartFile[] files){
+        DbxClient client = currentAuthUserService.getClient();
         for (MultipartFile file : files) {
             try {
                 byte[] bytes = file.getBytes();
