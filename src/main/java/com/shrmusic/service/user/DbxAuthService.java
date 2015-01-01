@@ -3,6 +3,7 @@ package com.shrmusic.service.user;
 import com.dropbox.core.*;
 import com.shrmusic.entity.user.User;
 import com.shrmusic.repository.user.UserJpaRepository;
+import com.shrmusic.service.CurrentAuthenticatedUserService;
 import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ public class DbxAuthService {
     private UserJpaRepository userJpaRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CurrentAuthenticatedUserService currentAuthenticatedUserService;
     private DbxWebAuthNoRedirect webAuthNoRedirect;
     private final RoleEnum roleTOKENSAVED = RoleEnum.ROLE_TOKENSAVED;
 
@@ -33,12 +36,12 @@ public class DbxAuthService {
     }
 
     @Transactional
-    public boolean createTokenAndSaveToDB(final Long id, final String authKey){
+    public boolean createTokenAndSaveToDB(final String authKey){
+        User user = currentAuthenticatedUserService.getCurrentAuthenticatedUser();
         try {
             DbxAuthFinish authFinish = webAuthNoRedirect.finish(authKey);
-            User user = userJpaRepository.findOne(id);
             user.setAccessToken(authFinish.accessToken);
-            userService.addRole(id, roleTOKENSAVED.getRole());
+            userService.addRole(roleTOKENSAVED.getRole());
             return true;
         } catch (DbxException e) {
             return false;

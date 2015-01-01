@@ -28,7 +28,7 @@ public class AccountDbxAuthController {
     @RequestMapping(value = "/{authKey}", method = RequestMethod.PUT)
     public void createTokenWithAuthKey(@PathVariable("id") final Long id,
                                        @PathVariable("authKey") final String authKey, HttpServletResponse response){
-        if(dbxAuthService.userExists(id) && dbxAuthService.createTokenAndSaveToDB(id, authKey)){
+        if(dbxAuthService.userExists(id) && dbxAuthService.createTokenAndSaveToDB(authKey)){
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
         }else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

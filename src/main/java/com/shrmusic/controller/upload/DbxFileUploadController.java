@@ -16,7 +16,7 @@ public class DbxFileUploadController {
     @RequestMapping(value = "", method = RequestMethod.POST)
     public void uploadFiles(@RequestParam("files") MultipartFile[] files, @PathVariable("id") final Long id,
                             HttpServletResponse response){
-        if(dbxUploadService.uploadFiles(id, files)){
+        if(dbxUploadService.uploadFiles(files)){
             response.setStatus(HttpServletResponse.SC_OK);
         }else{
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

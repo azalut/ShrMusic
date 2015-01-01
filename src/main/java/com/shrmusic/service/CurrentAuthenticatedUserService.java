@@ -12,11 +12,11 @@ import org.springframework.stereotype.Service;
 import java.util.Locale;
 
 @Service
-public class CurrentAuthUserService {
+public class CurrentAuthenticatedUserService {
     @Autowired
     private UserJpaRepository userJpaRepository;
 
-    private User getCurrentAuthenticatedUser(){
+    public User getCurrentAuthenticatedUser(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userJpaRepository.findByUsername(authentication.getName());
     }

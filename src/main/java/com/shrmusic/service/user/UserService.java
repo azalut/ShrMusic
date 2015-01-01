@@ -3,6 +3,7 @@ package com.shrmusic.service.user;
 import com.shrmusic.entity.user.Role;
 import com.shrmusic.entity.user.User;
 import com.shrmusic.repository.user.UserJpaRepository;
+import com.shrmusic.service.CurrentAuthenticatedUserService;
 import com.shrmusic.util.RoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,8 @@ import java.util.Set;
 public class UserService {
     @Autowired
     private UserJpaRepository userJpaRepository;
+    @Autowired
+    private CurrentAuthenticatedUserService currentAuthenticatedUserService;
     private final RoleEnum role = RoleEnum.ROLE_USER;
 
     public User findById(Long id){
@@ -39,8 +42,8 @@ public class UserService {
     }
 
     @Transactional
-    public void addRole(final Long id, Role role){
-        User user = userJpaRepository.getOne(id);
+    public void addRole(Role role){
+        User user = currentAuthenticatedUserService.getCurrentAuthenticatedUser();
         Set<Role> roles = user.getRoles();
         roles.add(role);
         user.setRoles(roles);
