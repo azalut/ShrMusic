@@ -3,6 +3,7 @@ package com.shrmusic.service.download;
 import com.dropbox.core.DbxClient;
 import com.dropbox.core.DbxEntry;
 import com.dropbox.core.DbxException;
+import com.shrmusic.entity.DownloadedFile;
 import com.shrmusic.service.CurrentAuthenticatedUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,7 @@ public class DbxDownloadService {
      * @return null if file was not found on dropbox, byte array if the file was found
      * @throws IOException
      */
-    public byte[] getFile(final String filename, final String extension) throws IOException {
+    public DownloadedFile getFile(final String filename, final String extension) throws IOException {
         final String completeFilename = filename + extension;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DbxClient client = currentAuthenticatedUserService.getClient();
@@ -44,11 +45,12 @@ public class DbxDownloadService {
             if(file == null){
                 return null;
             }
+            return new DownloadedFile(file.name, outputStream.toByteArray());
         } catch (DbxException e){
             e.printStackTrace();
+            return null;
         } finally {
             outputStream.close();
         }
-        return outputStream.toByteArray();
     }
 }
