@@ -4,10 +4,7 @@ import com.shrmusic.entity.DownloadedFile;
 import com.shrmusic.service.download.DbxDownloadService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -38,6 +35,16 @@ public class DbxFileDownloadController {
         response.setHeader("Content-Disposition", "attachment; filename=" + filename);
         return downloadedFile.getFileBytes();
     }
+
+    @RequestMapping(value = "/cos", method = RequestMethod.POST)
+    public byte[] getZippedFiles(@RequestParam("filenames") List<String> filenames){
+        for (String filename : filenames) {
+            System.err.println(filename);
+        }
+        return null;
+    }
+
+
 
     @RequestMapping(value = "/zip", produces = "application/zip")
     public byte[] zipFiles(HttpServletResponse response) throws IOException {

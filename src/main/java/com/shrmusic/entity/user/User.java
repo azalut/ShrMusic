@@ -21,7 +21,7 @@ public class User implements Serializable{
     private String password;
     @Column @NotNull
     private boolean enabled;
-    @Column
+    @Column @JsonIgnore
     private String accessToken;
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
