@@ -14,7 +14,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 @RestController
-@RequestMapping(value = "account/{id}/download")
+@RequestMapping(value = "/download")
 public class DbxFileDownloadController {
     @Autowired
     private DbxDownloadService dbxDownloadService;
