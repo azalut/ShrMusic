@@ -36,8 +36,8 @@ public class DbxFileDownloadController {
         return downloadedFile.getFileBytes();
     }
 
-    @RequestMapping(value = "/cos", method = RequestMethod.POST)
-    public byte[] getZippedFiles(@RequestParam("filenames") List<String> filenames){
+    @RequestMapping(value = "/costam", method = RequestMethod.POST)
+    public byte[] getZippedFiless(@RequestParam("filenames[]") String[] filenames){
         for (String filename : filenames) {
             System.err.println(filename);
         }
