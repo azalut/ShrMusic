@@ -32,21 +32,50 @@ public class DbxFileDownloadController {
             throw new FileNotFoundException("File was not found on your Dropbox account");
         }
         response.setContentType("audio/mpeg3");
-        response.setHeader("Content-Disposition", "attachment; filename=" + filename);
+        response.setHeader("Content-Disposition", "attachment; filename=" + filename + extension);
         return downloadedFile.getFileBytes();
     }
 
-    @RequestMapping(value = "/costam", method = RequestMethod.POST)
-    public byte[] getZippedFiless(@RequestParam("filenames[]") String[] filenames){
-        for (String filename : filenames) {
+    @RequestMapping(value = "/zip", method = RequestMethod.GET)
+    public byte[] getZippedFiless(@RequestParam("filenames[]") String[] filenames, HttpServletResponse response) throws IOException{
+
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
+
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+        ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+
+        ArrayList<File> files = new ArrayList<>(2);
+        for (String filename : filenames){
             System.err.println(filename);
+            files.add(new File(filename));
         }
-        return null;
+
+        for (File file : files) {
+            zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            IOUtils.copy(fileInputStream, zipOutputStream);
+
+            fileInputStream.close();
+            zipOutputStream.closeEntry();
+        }
+
+        if (zipOutputStream != null) {
+            zipOutputStream.finish();
+            zipOutputStream.flush();
+            IOUtils.closeQuietly(zipOutputStream);
+        }
+        IOUtils.closeQuietly(bufferedOutputStream);
+        IOUtils.closeQuietly(byteArrayOutputStream);
+
+        return byteArrayOutputStream.toByteArray();
     }
 
 
 
-    @RequestMapping(value = "/zip", produces = "application/zip")
+    @RequestMapping(value = "/zipp", produces = "application/zip")
     public byte[] zipFiles(HttpServletResponse response) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.addHeader("Content-Disposition", "attachment; filename=\"test.zip\"");
