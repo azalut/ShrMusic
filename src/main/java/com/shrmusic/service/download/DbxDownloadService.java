@@ -32,16 +32,14 @@ public class DbxDownloadService {
     /**
      *
      * @param filename
-     * @param extension
      * @return null if file was not found on dropbox, byte array if the file was found
      * @throws IOException
      */
-    public DownloadedFile getFile(final String filename, final String extension) throws IOException {
-        final String completeFilename = filename + extension;
+    public DownloadedFile getFile(final String filename) throws IOException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         DbxClient client = currentAuthenticatedUserService.getClient();
         try {
-            DbxEntry.File file = client.getFile("/" + completeFilename, null, outputStream);
+            DbxEntry.File file = client.getFile("/" + filename, null, outputStream);
             if(file == null){
                 return null;
             }

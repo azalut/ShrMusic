@@ -22,12 +22,16 @@ public class DbxUploadService {
             try {
                 byte[] bytes = file.getBytes();
                 ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(bytes);
-                client.uploadFile("/" + file.getOriginalFilename(), DbxWriteMode.add(), bytes.length, byteArrayInputStream);
+                client.uploadFile("/" + clearFilename(file.getOriginalFilename()), DbxWriteMode.add(), bytes.length, byteArrayInputStream);
                 byteArrayInputStream.close();
             } catch (IOException | DbxException e) {
                 return false;
             }
         }
         return true;
+    }
+
+    private String clearFilename(final String filename){
+        return filename.replaceAll("[^a-zA-Z0-9/&.()]", "-");
     }
 }
