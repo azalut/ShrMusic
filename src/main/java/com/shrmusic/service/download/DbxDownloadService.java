@@ -5,14 +5,18 @@ import com.dropbox.core.DbxEntry;
 import com.dropbox.core.DbxException;
 import com.shrmusic.entity.DownloadedFile;
 import com.shrmusic.service.CurrentAuthenticatedUserService;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 public class DbxDownloadService {
@@ -50,5 +54,32 @@ public class DbxDownloadService {
         } finally {
             outputStream.close();
         }
+    }
+
+    /**
+     *
+     * @param filenames
+     * @return returns .zip file that contains files previously downloaded from user's dropbox account
+     * @throws IOException
+     */
+    public byte[] createZipArchiveWithFilesFromDbx(final String[] filenames) throws IOException{
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+        ZipOutputStream zipOutputStream = new ZipOutputStream(bufferedOutputStream);
+
+        for (String filename : filenames) {
+            DownloadedFile downloadedFile = getFile(filename);
+            zipOutputStream.putNextEntry(createZipEntry(downloadedFile.getFilename(), downloadedFile.getFileBytes().length));
+            zipOutputStream.write(downloadedFile.getFileBytes());
+            zipOutputStream.closeEntry();
+        }
+        IOUtils.closeQuietly(zipOutputStream);
+        return byteArrayOutputStream.toByteArray();
+    }
+
+    private ZipEntry createZipEntry(String filename, long size){
+        ZipEntry zipEntry = new ZipEntry(filename);
+        zipEntry.setSize(size);
+        return zipEntry;
     }
 }
