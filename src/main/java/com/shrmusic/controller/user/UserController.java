@@ -37,12 +37,4 @@ public class UserController {
         }
         return user;
     }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public void usernamePasswordException(ConstraintViolationException exception){
-        exception.getConstraintViolations().stream().forEach(
-                n -> System.out.println(n.getPropertyPath().toString())
-        );
-    }
 }
