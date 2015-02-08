@@ -13,7 +13,7 @@ public class AccountDbxAuthController {
     @Autowired
     private DbxAuthService dbxAuthService;
 
-    @RequestMapping(value = "/dbxauth", method = RequestMethod.GET)
+    @RequestMapping(value = "/dbxauth", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
     public String returnDbxAuthUrl(@RequestParam("appkey") final String appkey, @RequestParam("appsecret") final String appsecret){
         return dbxAuthService.returnAuthUrl(appkey, appsecret);
     }
